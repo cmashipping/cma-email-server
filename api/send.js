@@ -1,18 +1,12 @@
 const nodemailer = require("nodemailer");
 
 module.exports = async (req, res) => {
-  // ✅ تفعيل CORS
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-  if (req.method === "OPTIONS") {
-    return res.status(200).end(); // ✅ Preflight OK
-  }
-
-  if (req.method !== "POST") {
-    return res.status(405).send("Only POST requests allowed");
-  }
+  if (req.method === "OPTIONS") return res.status(200).end();
+  if (req.method !== "POST") return res.status(405).send("Only POST requests allowed");
 
   const { to, subject, html } = req.body;
 
@@ -22,7 +16,7 @@ module.exports = async (req, res) => {
     secure: true,
     auth: {
       user: "no-reply@cmasealand.com",
-      pass: "Cma@2024cma"
+      pass: "Cma@2024cma",
     },
   });
 
@@ -31,9 +25,8 @@ module.exports = async (req, res) => {
       from: '"CMA SEA LAND" <no-reply@cmasealand.com>',
       to,
       subject,
-      html
+      html,
     });
-
     res.status(200).send("Email sent successfully");
   } catch (err) {
     console.error("Email error:", err);
