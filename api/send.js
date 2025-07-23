@@ -1,13 +1,13 @@
+
+const express = require("express");
 const nodemailer = require("nodemailer");
+const cors = require("cors");
 
-module.exports = async (req, res) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+const app = express();
+app.use(cors());
+app.use(express.json());
 
-  if (req.method === "OPTIONS") return res.status(200).end();
-  if (req.method !== "POST") return res.status(405).send("Only POST requests allowed");
-
+app.post("/send", async (req, res) => {
   const { to, subject, html } = req.body;
 
   const transporter = nodemailer.createTransport({
@@ -29,7 +29,12 @@ module.exports = async (req, res) => {
     });
     res.status(200).send("Email sent successfully");
   } catch (err) {
-    console.error("Email error:", err);
+    console.error("Email send error:", err);
     res.status(500).send("Failed to send email");
   }
-};
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log("🚀 Email server running on port", PORT);
+});
