@@ -1,21 +1,13 @@
-export default async function handler(req, res) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+import express from "express";
+import nodemailer from "nodemailer";
+import cors from "cors";
 
-  if (req.method === "OPTIONS") {
-    res.status(200).end();
-    return;
-  }
+const app = express();
+app.use(cors());
+app.use(express.json());
 
-  if (req.method !== "POST") {
-    res.status(405).json({ error: "Method not allowed" });
-    return;
-  }
-
+app.post("/api/send", async (req, res) => {
   const { to, subject, html } = req.body;
-
-  const nodemailer = require("nodemailer");
 
   const transporter = nodemailer.createTransport({
     host: "smtp.titan.email",
@@ -40,4 +32,10 @@ export default async function handler(req, res) {
     console.error("Email error:", error);
     res.status(500).json({ success: false, error: error.message });
   }
-}
+});
+
+// تشغيل الخادم على المنصة (Render سيحدد البورت تلقائياً)
+const PORT = process.env.PORT || 10000;
+app.listen(PORT, () => {
+  console.log(`Email server running on port ${PORT}`);
+});
