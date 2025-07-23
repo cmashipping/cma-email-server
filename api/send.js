@@ -22,7 +22,7 @@ module.exports = async (req, res) => {
     secure: true,
     auth: {
       user: "no-reply@cmasealand.com",
-      pass: "Cma@2024cma",
+      pass: "Cma@2024cma"
     },
   });
 
@@ -31,7 +31,7 @@ module.exports = async (req, res) => {
       from: '"CMA SEA LAND" <no-reply@cmasealand.com>',
       to,
       subject,
-      html,
+      html
     });
 
     res.status(200).send("Email sent successfully");
